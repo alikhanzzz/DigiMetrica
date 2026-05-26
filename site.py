@@ -125,9 +125,9 @@ def inject_css():
         border: none;
         color: rgba(255,255,255,0.6);
         font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
+        font-size: 0px;
         font-weight: 500;
-        padding: 8px 16px;
+        padding: 0px 0px;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s ease;
