@@ -151,7 +151,7 @@ def inject_css():
     /* ---- Hero ---- */
     .hero {
         position: relative;
-        padding: 60px 0 80px;
+        padding: 50px 0 0px;
         text-align: center;
         overflow: hidden;
     }
