@@ -145,7 +145,7 @@ def inject_css():
     .page-wrap {
         max-width: 1000px;
         margin: 0 auto;
-        padding: 80px 24px 120px;
+        padding: 0px 24px 0px;
     }
 
     /* ---- Hero ---- */
