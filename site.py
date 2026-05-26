@@ -742,7 +742,7 @@ def inject_css():
         transition: all 0.2s ease !important;
         box-shadow: 0 4px 24px rgba(37,99,235,0.3) !important;
         width: auto !important; 
-        min-width: 220px !important;
+        min-width: 180px !important;
     }
     .stButton > button:hover {
         background: #1d4ed8 !important;
