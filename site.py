@@ -79,8 +79,8 @@ def inject_css():
     #MainMenu, footer, header { visibility: hidden; }
     .block-container {
         padding-top: 0 !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
+        padding-left: 8rem !important;
+        padding-right: 8rem !important;
         padding-bottom: 0 !important;
 
         max-width: 1400px !important;
@@ -100,7 +100,7 @@ def inject_css():
         background: rgba(7,8,13,0.92);
         backdrop-filter: blur(16px);
         border-bottom: 1px solid rgba(255,255,255,0.07);
-        padding: 0 80px;
+        padding: 0 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -263,7 +263,7 @@ def inject_css():
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.08);
         border-radius: 20px;
-        padding: 32px;
+        padding: 16px;
         transition: all 0.3s ease;
     }
     .card:hover {
@@ -302,7 +302,7 @@ def inject_css():
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.08);
         border-radius: 24px;
-        padding: 36px 28px;
+        padding: 20px 28px;
         position: relative;
         transition: all 0.3s ease;
     }
@@ -336,7 +336,7 @@ def inject_css():
     }
     .pricing-price {
         font-family: 'Syne', sans-serif;
-        font-size: 48px;
+        font-size: 32px;
         font-weight: 800;
         color: #fff;
         line-height: 1;
