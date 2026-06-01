@@ -1,10 +1,5 @@
-"""
-Digital Maturity - Full Streamlit Application
-Run with: streamlit run site.py
-
-Required packages (install if missing):
-    pip install streamlit requests beautifulsoup4 fpdf2 google-generativeai
-"""
+# pip install streamlit requests beautifulsoup4 fpdf2 google-generativeai
+# streamlit run site.py
 
 import streamlit as st
 import requests
@@ -17,18 +12,10 @@ import base64
 import re
 import os
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
-
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash-lite"
 
 genai.configure(api_key=GOOGLE_API_KEY)
-
-# ============================================================
-# PAGE CONFIG
-# ============================================================
 
 st.set_page_config(
     page_title="DigiMetrica",
@@ -36,10 +23,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-
-# ============================================================
-# SESSION STATE INIT
-# ============================================================
 
 def init_session():
     defaults = {
@@ -56,16 +39,11 @@ def init_session():
 
 init_session()
 
-# ============================================================
-# GLOBAL CSS
-# ============================================================
-
 def inject_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ---- Reset & Base ---- */
     html, body, [class*="css"] {
         font-family: 'DM Sans', sans-serif;
         background-color: #07080d;
@@ -75,7 +53,6 @@ def inject_css():
         background: #07080d;
     }
 
-    /* ---- Hide Streamlit chrome ---- */
     #MainMenu, footer, header { visibility: hidden; }
     .block-container {
         padding-top: 0 !important;
@@ -87,12 +64,10 @@ def inject_css():
         margin: 0 auto !important;
     }
 
-    /* ---- Scrollbar ---- */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: #0e0f17; }
     ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 4px; }
 
-    /* ---- Navbar ---- */
     .navbar {
         position: sticky;
         top: 0;
@@ -141,14 +116,12 @@ def inject_css():
         border: 1px solid rgba(37,99,235,0.35);
     }
 
-    /* ---- Page wrapper ---- */
     .page-wrap {
         max-width: 1000px;
         margin: 0 auto;
         padding: 0px 24px 0px;
     }
 
-    /* ---- Hero ---- */
     .hero {
         position: relative;
         padding: 50px 0 0px;
@@ -193,7 +166,6 @@ def inject_css():
         text-align: center !important;
     }
 
-    /* ---- Buttons ---- */
     .btn-primary {
         display: inline-block;
         background: #2563eb;
@@ -233,7 +205,6 @@ def inject_css():
         border-color: rgba(255,255,255,0.2);
     }
 
-    /* ---- Section titles ---- */
     .section-label {
         font-size: 11px;
         font-weight: 700;
@@ -258,7 +229,6 @@ def inject_css():
         line-height: 1.7;
     }
 
-    /* ---- Cards ---- */
     .card {
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.08);
@@ -290,7 +260,6 @@ def inject_css():
         margin: 0;
     }
 
-    /* ---- Pricing cards ---- */
     .pricing-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -365,21 +334,18 @@ def inject_css():
     .pricing-feature:last-child { border-bottom: none; }
     .pricing-check { color: #2563eb; font-size: 15px; flex-shrink: 0; }
 
-    /* ---- CTA Section ---- */
     .cta-section {
         text-align: center;
         padding: 80px 0 20px;
         margin-bottom: 120px;
     }
 
-    /* ---- Divider ---- */
     .divider {
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
         margin: 90px 0;
     }
 
-    /* ---- Test page ---- */
     .test-header {
         text-align: center;
         padding: 48px 0 32px;
@@ -410,7 +376,6 @@ def inject_css():
         line-height: 1.5;
     }
 
-    /* ---- Radio buttons override ---- */
     .stRadio > label { display: none !important; }
     .stRadio [data-testid="stMarkdownContainer"] p {
         font-size: 14px !important;
@@ -432,7 +397,6 @@ def inject_css():
         border-color: rgba(37,99,235,0.3) !important;
     }
 
-    /* ---- Result ---- */
     .result-hero {
         text-align: center;
         padding: 48px 0 32px;
@@ -499,7 +463,6 @@ def inject_css():
         padding-bottom: 60px;
     }
 
-    /* ---- News ---- */
     .news-card {
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.08);
@@ -542,7 +505,6 @@ def inject_css():
     }
     .news-link:hover { text-decoration: underline; }
 
-    /* ---- General Info / Timeline ---- */
     .timeline-item {
         display: flex;
         gap: 24px;
@@ -576,7 +538,6 @@ def inject_css():
         margin: 0;
     }
 
-    /* ---- Cabinet ---- */
     .cabinet-card {
         background: rgba(255,255,255,0.04);
         border: 1px solid rgba(255,255,255,0.08);
@@ -638,7 +599,6 @@ def inject_css():
     .answer-q { color: rgba(255,255,255,0.55); flex: 1; }
     .answer-a { color: rgba(255,255,255,0.85); font-weight: 500; text-align: right; max-width: 55%; }
 
-    /* ---- Account ---- */
     .account-grid {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -718,7 +678,6 @@ def inject_css():
         margin-top: 4px;
     }
 
-    /* ---- Stagger animation ---- */
     @keyframes fadeUp {
         from { opacity: 0; transform: translateY(24px); }
         to { opacity: 1; transform: translateY(0); }
@@ -729,7 +688,6 @@ def inject_css():
     .delay-3 { animation-delay: 0.3s; opacity: 0; }
     .delay-4 { animation-delay: 0.4s; opacity: 0; }
 
-    /* ---- Streamlit widget overrides ---- */
     .stButton > button {
         background: #2563eb !important;
         color: #fff !important;
@@ -760,7 +718,6 @@ def inject_css():
     }
     .stAlert { border-radius: 12px !important; }
 
-    /* ---- Misc ---- */
     a { color: #60a5fa; }
     strong { color: #fff; }
     </style>
@@ -768,19 +725,11 @@ def inject_css():
 
 inject_css()
 
-# ============================================================
-# QUESTIONS & ANSWERS
-# ============================================================
-# Each question has a list of options (A, B, C, D, E).
-# The score for each option is its index + 1 (A=1, B=2, C=3, D=4, E=5).
-# EDIT THE OPTIONS BELOW TO ADD YOUR ACTUAL ANSWER CHOICES.
-
 QUESTIONS = [
     {
         "id": 1,
         "text": "Do you have a clear plan or strategy for the company's development in the digital direction for at least 1-2 years?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 1 BELOW ---
             "Not at all",
             "Only common ideas",
             "There is an approximate plan",
@@ -792,7 +741,6 @@ QUESTIONS = [
         "id": 2,
         "text": "How often do you or the director personally deal with business digitalization issues?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 2 BELOW ---
             "Almost never",
             "Only on serious problems",
             "Sometimes",
@@ -804,7 +752,6 @@ QUESTIONS = [
         "id": 3,
         "text": "Do you use sales, customer and competitor data when making important decisions?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 3 BELOW ---
             "No",
             "Sometimes we watch simple reports",
             "We regularly look at basic statistics",
@@ -816,7 +763,6 @@ QUESTIONS = [
         "id": 4,
         "text": "How comfortable are your employees working with a computer, programs and digital tools?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 4 BELOW ---
             "Many people feel insecure",
             "Only basic skills (Excel, Word, Messengers)",
             "They work normally with the main programs",
@@ -828,7 +774,6 @@ QUESTIONS = [
         "id": 5,
         "text": "Do you train employees in new programs and applications?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 5 BELOW ---
             "No",
             "Only when it’s necessary",
             "Sometimes",
@@ -840,7 +785,6 @@ QUESTIONS = [
         "id": 6,
         "text": "Can your employees offer and implement new digital tools themselves?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 6 BELOW ---
             "No",
             "They can offer, but it doesn’t go any further",
             "Sometimes ideas are accepted",
@@ -852,7 +796,6 @@ QUESTIONS = [
         "id": 7,
         "text": "How related are your main programs (accounting, sales, warehouse, payments)?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 7 BELOW ---
             "Everything works separately",
             "Partially connected",
             "Most of the programs are integrated",
@@ -864,7 +807,6 @@ QUESTIONS = [
         "id": 8,
         "text": "What solutions do you mainly use for the company's work?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 8 BELOW ---
             "Only local programs on computers",
             "A mixture of local and cloud",
             "Mostly cloud services",
@@ -876,7 +818,6 @@ QUESTIONS = [
         "id": 9,
         "text": "How are things going with the automation of repetitive tasks (accounts, reminders, reports, etc.)?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 9 BELOW ---
             "It’s not automated ",
             "Automated quite a bit",
             "Automated the main routine tasks",
@@ -888,7 +829,6 @@ QUESTIONS = [
         "id": 10,
         "text": "How much do you understand the behavior of your customers (where do they come from, what do they need, why do they leave)?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 10 BELOW ---
             "Superficially",
             "There is a general understanding",
             "There is basic analytics",
@@ -900,7 +840,6 @@ QUESTIONS = [
         "id": 11,
         "text": "Do you use personalization for different customers?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 11 BELOW ---
             "No",
             "Sometimes",
             "Moderate",
@@ -912,7 +851,6 @@ QUESTIONS = [
         "id": 12,
         "text": "How convenient is it for the client to buy from you or contact the company?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 12 BELOW ---
             "Only by phone or in person",
             "There are basic online channels (WhatsApp, Instagram)",
             "There is a website and messengers",
@@ -924,7 +862,6 @@ QUESTIONS = [
         "id": 13,
         "text": "How automated are the company's internal processes (accounting, procurement, order fulfillment)?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 13 BELOW ---
             "Not at all",
             "Partially",
             "Many processes are automated",
@@ -936,7 +873,6 @@ QUESTIONS = [
         "id": 14,
         "text": "How often do you use data and reports in business management?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 14 BELOW ---
             "Almost never",
             "Sometimes",
             "Regularly",
@@ -948,7 +884,6 @@ QUESTIONS = [
         "id": 15,
         "text": "How are things going with customer data protection and backup?",
         "options": [
-            # --- INSERT YOUR ANSWER OPTIONS FOR QUESTION 15 BELOW ---
             "There is almost no protection",
             "There is a basic protection",
             "We make a backup",
@@ -957,10 +892,6 @@ QUESTIONS = [
         ]
     },
 ]
-
-# ============================================================
-# NAVIGATION
-# ============================================================
 
 PAGES = ["Home", "News", "General Info", "Cabinet", "Account"]
 
@@ -977,18 +908,15 @@ def render_navbar():
     nav_html += "</div></div>"
     st.markdown(nav_html, unsafe_allow_html=True)
 
-    # Real navigation with Streamlit columns
     cols = st.columns(len(PAGES) + 2)
     for i, p in enumerate(PAGES):
         with cols[i + 1]:
-            # Invisible but clickable
             if st.button(p, key=f"nav_{p}", help=None, use_container_width=True):
                 st.session_state.page = p
                 st.rerun()
 
     st.markdown("""
     <style>
-    /* Hide the actual streamlit nav buttons but keep them clickable */
     div[data-testid="column"] .stButton > button {
         opacity: 0 !important;
         position: absolute !important;
@@ -1001,14 +929,9 @@ def render_navbar():
     </style>
     """, unsafe_allow_html=True)
 
-# ============================================================
-# HOME PAGE
-# ============================================================
-
 def page_home():
     st.markdown('<div class="page-wrap">', unsafe_allow_html=True)
 
-    # --- Hero ---
     st.markdown("""
     <div class="hero fade-up">
         <div class="hero-bg"></div>
@@ -1021,7 +944,6 @@ def page_home():
     </div>
     """, unsafe_allow_html=True)
 
-    # Start trial CTA in hero
     col_l, col_c, col_r = st.columns([2, 1, 2])
     with col_c:
         if st.button("Start Trial Test", key="hero_start"):
@@ -1030,7 +952,6 @@ def page_home():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # --- What we do ---
     st.markdown("""
     <div class="fade-up delay-1">
         <div class="section-label">What We Do</div>
@@ -1046,7 +967,6 @@ def page_home():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # --- Advantages ---
     st.markdown("""
     <div class="section-label">Why Choose Us</div>
     <div class="section-title">Our Advantages</div>
@@ -1073,7 +993,6 @@ def page_home():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # --- Pricing ---
     st.markdown("""
     <div class="section-label">Pricing</div>
     <div class="section-title">Subscription Plans</div>
@@ -1117,7 +1036,6 @@ def page_home():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # --- CTA ---
     st.markdown("""
     <div class="cta-section fade-up delay-3">
         <div class="section-label">Get Started</div>
@@ -1137,19 +1055,13 @@ def page_home():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ============================================================
-# TEST PAGE
-# ============================================================
-
 def calculate_score(answers: dict) -> int:
-    """Calculate Digital Maturity Index as a percentage (0-100)."""
     total = sum(answers.values())
-    max_score = len(QUESTIONS) * 5  # 15 * 5 = 75
+    max_score = len(QUESTIONS) * 5
     return round((total / max_score) * 100)
 
 
 def get_level(score: int) -> tuple:
-    """Return (level_name, color, description) based on score."""
     if score < 25:
         return "Beginner", "#ef4444", "Your organisation is at the very start of its digital journey."
     elif score < 45:
@@ -1163,7 +1075,6 @@ def get_level(score: int) -> tuple:
 
 
 def get_ai_recommendation(answers: dict, score: int) -> str:
-    """Call Gemini AI and return recommendation string."""
     qa_lines = []
     for q in QUESTIONS:
         qid = q["id"]
@@ -1245,10 +1156,8 @@ def page_test():
         """, unsafe_allow_html=True)
 
         current_val = st.session_state.test_answers.get(qid, None)
-        # Build options display (no A/B/C labels shown)
         options_display = q["options"]
 
-        # Find index if already answered
         idx = None
         if current_val is not None:
             idx = current_val - 1
@@ -1267,7 +1176,6 @@ def page_test():
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-    # Validation error
     if show_validation:
         missing = [q["id"] for q in QUESTIONS if q["id"] not in st.session_state.test_answers]
         if missing:
@@ -1286,7 +1194,6 @@ def page_test():
                 st.session_state.dmi_score = score
                 st.session_state.test_done = True
 
-                # Get AI recommendation
                 with st.spinner("Generating your AI-powered report..."):
                     try:
                         rec = get_ai_recommendation(st.session_state.test_answers, score)
@@ -1305,7 +1212,6 @@ def render_results():
 
     st.markdown('<div class="page-wrap">', unsafe_allow_html=True)
 
-    # Score hero
     st.markdown(f"""
     <div class="result-hero fade-up">
         <div class="section-label">Assessment Complete</div>
@@ -1318,12 +1224,10 @@ def render_results():
     </div>
     """, unsafe_allow_html=True)
 
-    # Progress bar
     st.progress(score / 100)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Metric cards
     total_points = sum(st.session_state.test_answers.values())
     max_points = len(QUESTIONS) * 5
     avg = total_points / len(QUESTIONS)
@@ -1350,7 +1254,6 @@ def render_results():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Answers summary
     st.markdown('<div class="section-title" style="font-size:24px;">Your Responses</div>', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     for q in QUESTIONS:
@@ -1367,7 +1270,6 @@ def render_results():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # AI Recommendation
     st.markdown("""
     <div class="ai-box fade-up">
         <h3>🤖 AI-Powered Recommendation</h3>
@@ -1376,13 +1278,11 @@ def render_results():
     if ai_rec.startswith("Error:"):
         st.error(ai_rec)
     else:
-        # Render AI text with line breaks
         formatted = ai_rec.replace("\n", "<br>")
         st.markdown(f'<p style="font-size:15px; color:rgba(255,255,255,0.75); line-height:1.9;">{formatted}</p>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Action buttons
     st.markdown('<div class="action-row">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
 
@@ -1423,10 +1323,6 @@ def _hex_to_rgb(hex_color: str) -> str:
     r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
     return f"{r},{g},{b}"
 
-# ============================================================
-# PDF EXPORT
-# ============================================================
-
 class DMIPdf(FPDF):
     def header(self):
         self.set_font("Helvetica", "B", 11)
@@ -1445,7 +1341,6 @@ class DMIPdf(FPDF):
 
 
 def _clean_text(text: str) -> str:
-    """Remove characters that fpdf latin-1 cannot encode."""
     replacements = {
         "\u2014": "-", "\u2013": "-", "\u2018": "'", "\u2019": "'",
         "\u201c": '"', "\u201d": '"', "\u2022": "-", "\u2026": "...",
@@ -1453,7 +1348,6 @@ def _clean_text(text: str) -> str:
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
-    # Remove any remaining non-latin-1 characters
     text = text.encode("latin-1", errors="replace").decode("latin-1")
     return text
 
@@ -1463,13 +1357,11 @@ def generate_pdf(score: int, level: str, answers: dict, ai_rec: str) -> bytes:
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
 
-    # Date
     pdf.set_font("Helvetica", size=9)
     pdf.set_text_color(120, 120, 120)
     pdf.cell(0, 8, f"Date: {datetime.now().strftime('%B %d, %Y - %H:%M')}", new_x="LMARGIN", new_y="NEXT")
     pdf.ln(4)
 
-    # Score block
     pdf.set_fill_color(37, 99, 235)
     pdf.set_text_color(255, 255, 255)
     pdf.set_font("Helvetica", "B", 28)
@@ -1479,7 +1371,6 @@ def generate_pdf(score: int, level: str, answers: dict, ai_rec: str) -> bytes:
     pdf.cell(0, 10, f"Level: {level}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
     pdf.ln(10)
 
-    # Answers
     pdf.set_text_color(30, 30, 30)
     pdf.set_font("Helvetica", "B", 13)
     pdf.set_text_color(37, 99, 235)
@@ -1508,7 +1399,6 @@ def generate_pdf(score: int, level: str, answers: dict, ai_rec: str) -> bytes:
 
     pdf.ln(6)
 
-    # AI Recommendation
     pdf.set_font("Helvetica", "B", 13)
     pdf.set_text_color(37, 99, 235)
     pdf.cell(0, 10, "AI-Powered Recommendation", new_x="LMARGIN", new_y="NEXT")
@@ -1526,7 +1416,6 @@ def generate_pdf(score: int, level: str, answers: dict, ai_rec: str) -> bytes:
             if not paragraph:
                 pdf.ln(3)
                 continue
-            # Bold section headers (all-caps lines like "1. EXECUTIVE SUMMARY")
             if re.match(r"^\d+\.", paragraph) and paragraph == paragraph.upper():
                 pdf.set_font("Helvetica", "B", 10)
                 pdf.set_text_color(37, 99, 235)
@@ -1540,12 +1429,7 @@ def generate_pdf(score: int, level: str, answers: dict, ai_rec: str) -> bytes:
     pdf.output(output)
     return output.getvalue()
 
-# ============================================================
-# NEWS PAGE
-# ============================================================
-
 def fetch_techcrunch_news(limit=6):
-    """Parse TechCrunch front page for news cards."""
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -1563,7 +1447,6 @@ def fetch_techcrunch_news(limit=6):
 
     articles = []
 
-    # Primary selector from spec
     query_block = soup.find("div", class_=lambda c: c and "wp-block-query" in c and "is-layout-flow" in c)
     if query_block:
         ul = query_block.find("ul", class_=lambda c: c and "wp-block-post-template" in c)
@@ -1583,7 +1466,6 @@ def fetch_techcrunch_news(limit=6):
 
                 articles.append({"title": title, "link": link, "image": img})
 
-    # Fallback: find all article tags
     if not articles:
         for article in soup.find_all("article")[:limit]:
             title_tag = article.find(["h2", "h3"])
@@ -1624,7 +1506,6 @@ def page_news():
         st.markdown('</div>', unsafe_allow_html=True)
         return
 
-    # Render 2 rows of 3
     for row_start in range(0, len(articles), 3):
         cols = st.columns(3)
         for col, article in zip(cols, articles[row_start:row_start + 3]):
@@ -1649,10 +1530,6 @@ def page_news():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ============================================================
-# GENERAL INFO PAGE
-# ============================================================
-
 def page_general_info():
     st.markdown('<div class="page-wrap">', unsafe_allow_html=True)
 
@@ -1665,7 +1542,6 @@ def page_general_info():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # About section
     c1, c2 = st.columns([3, 2])
     with c1:
         st.markdown("""
@@ -1703,7 +1579,6 @@ def page_general_info():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Timeline
     st.markdown("""
     <div class="section-label">Journey</div>
     <div class="section-title" style="margin-bottom:40px;">Project Timeline</div>
@@ -1735,7 +1610,6 @@ def page_general_info():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Founder
     st.markdown("""
     <div class="section-label">Team</div>
     <div class="section-title" style="margin-bottom:32px;">Founder</div>
@@ -1771,10 +1645,6 @@ def page_general_info():
         """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# ============================================================
-# CABINET PAGE (pre-loaded historical tests)
-# ============================================================
 
 CABINET_TESTS = [
     {
@@ -1927,7 +1797,6 @@ def page_cabinet():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Summary stats
     c1, c2, c3 = st.columns(3)
     scores = [t["score"] for t in CABINET_TESTS]
     with c1:
@@ -1942,7 +1811,6 @@ def page_cabinet():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Test cards with expand
     for test in CABINET_TESTS:
         level, lc, _ = get_level(test["score"])
         tag_class = "trial" if test["type"] == "Trial" else ""
@@ -1950,7 +1818,6 @@ def page_cabinet():
         with st.expander(f"", expanded=False):
             pass
 
-        # Custom expander using session state
         expand_key = f"expand_{test['id']}"
         if expand_key not in st.session_state:
             st.session_state[expand_key] = False
@@ -1982,7 +1849,6 @@ def page_cabinet():
         if is_expanded:
             st.markdown('<div class="expand-content">', unsafe_allow_html=True)
 
-            # Level badge
             st.markdown(f"""
             <div style="margin-bottom:20px;">
                 <span style="font-size:13px; color:rgba(255,255,255,0.4);">Level: </span>
@@ -1993,7 +1859,6 @@ def page_cabinet():
             </div>
             """, unsafe_allow_html=True)
 
-            # Answers
             st.markdown('<div style="font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2563eb; margin-bottom:12px;">Responses</div>', unsafe_allow_html=True)
             for q in QUESTIONS:
                 qid = q["id"]
@@ -2006,7 +1871,6 @@ def page_cabinet():
                     </div>
                     """, unsafe_allow_html=True)
 
-            # Recommendation
             st.markdown("""
             <div class="ai-box" style="margin-top:24px;">
                 <h3>🤖 AI Recommendation</h3>
@@ -2020,10 +1884,6 @@ def page_cabinet():
         st.markdown("<br>", unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# ============================================================
-# ACCOUNT PAGE
-# ============================================================
 
 def page_account():
     st.markdown('<div class="page-wrap">', unsafe_allow_html=True)
@@ -2069,7 +1929,6 @@ def page_account():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Stats
     st.markdown('<div class="section-title" style="font-size:22px; margin-bottom:24px;">Activity Overview</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="stats-row">
@@ -2090,7 +1949,6 @@ def page_account():
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Plan card
     st.markdown("""
     <div class="section-title" style="font-size:22px; margin-bottom:24px;">Subscription</div>
     <div class="card" style="max-width:400px;">
@@ -2111,10 +1969,6 @@ def page_account():
     """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# ============================================================
-# ROUTER
-# ============================================================
 
 render_navbar()
 
